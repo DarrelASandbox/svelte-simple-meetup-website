@@ -1,5 +1,89 @@
 <script>
+  import MeetupGrid from './Meetups/MeetupGrid.svelte';
+  import Button from './UI/Button.svelte';
   import Header from './UI/Header.svelte';
+  import TextInput from './UI/TextInput.svelte';
+
+  let title = '';
+  let subtitle = '';
+  let address = '';
+  let email = '';
+  let description = '';
+  let imageUrl = '';
+
+  let meetups = [
+    {
+      id: 'm1',
+      title: 'Coding Bootcamp',
+      subtitle: 'Learn to code in 2 hours',
+      description:
+        'In this meetup, we will have some experts that teach you how to code!',
+      imageUrl:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Caffe_Nero_coffee_bar%2C_High_St%2C_Sutton%2C_Surrey%2C_Greater_London.JPG/800px-Caffe_Nero_coffee_bar%2C_High_St%2C_Sutton%2C_Surrey%2C_Greater_London.JPG',
+      address: '27th Nerd Road, 32523 New York',
+      contactEmail: 'code@test.com',
+    },
+    {
+      id: 'm2',
+      title: 'Swim Together',
+      subtitle: "Let's go for some swimming",
+      description: 'We will simply swim some rounds!',
+      imageUrl:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Olympic_swimming_pool_%28Tbilisi%29.jpg/800px-Olympic_swimming_pool_%28Tbilisi%29.jpg',
+      address: '27th Nerd Road, 32523 New York',
+      contactEmail: 'swim@test.com',
+    },
+  ];
+
+  const addMeetup = () => {
+    const newMeetup = {
+      id: Math.random().toString(),
+      title,
+      subtitle,
+      description,
+      imageUrl,
+      contactEmail: email,
+      address,
+    };
+
+    meetups = [newMeetup, ...meetups];
+  };
 </script>
 
 <Header />
+
+<main>
+  <form on:submit|preventDefault={addMeetup}>
+    <TextInput id="title" label="Title" bind:value={title} />
+    <TextInput id="subtitle" label="Subtitle" bind:value={subtitle} />
+    <TextInput id="address" label="Address" bind:value={address} />
+    <TextInput id="imageUrl" label="Image URL" bind:value={imageUrl} />
+    <TextInput
+      id="email"
+      label="E-Mail"
+      controlType="email"
+      value={email}
+      on:input={(e) => (email = e.target.value)}
+    />
+    <TextInput
+      id="description"
+      label="Description"
+      controlType="textarea"
+      bind:value={description}
+    />
+    <Button type="submit" caption="Save" />
+  </form>
+  <MeetupGrid {meetups} />
+</main>
+
+<style>
+  main {
+    margin-top: 5rem;
+  }
+
+  form {
+    width: 30rem;
+    max-width: 90%;
+    margin: auto;
+  }
+</style>

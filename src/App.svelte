@@ -1,15 +1,8 @@
 <script>
+  import EditMeetup from './Meetups/EditMeetup.svelte';
   import MeetupGrid from './Meetups/MeetupGrid.svelte';
-  import Button from './UI/Button.svelte';
   import Header from './UI/Header.svelte';
-  import TextInput from './UI/TextInput.svelte';
-
-  let title = '';
-  let subtitle = '';
-  let address = '';
-  let email = '';
-  let description = '';
-  let imageUrl = '';
+  import Button from './UI/Button.svelte';
 
   let meetups = [
     {
@@ -35,18 +28,16 @@
     },
   ];
 
-  const addMeetup = () => {
+  let editMode;
+
+  const addMeetup = (e) => {
     const newMeetup = {
       id: Math.random().toString(),
-      title,
-      subtitle,
-      description,
-      imageUrl,
-      contactEmail: email,
-      address,
+      ...e.detail,
     };
 
     meetups = [newMeetup, ...meetups];
+    editMode = null;
   };
 
   function toggleFavorite(event) {
@@ -63,26 +54,12 @@
 <Header />
 
 <main>
-  <form on:submit|preventDefault={addMeetup}>
-    <TextInput id="title" label="Title" bind:value={title} />
-    <TextInput id="subtitle" label="Subtitle" bind:value={subtitle} />
-    <TextInput id="address" label="Address" bind:value={address} />
-    <TextInput id="imageUrl" label="Image URL" bind:value={imageUrl} />
-    <TextInput
-      id="email"
-      label="E-Mail"
-      controlType="email"
-      value={email}
-      on:input={(e) => (email = e.target.value)}
-    />
-    <TextInput
-      id="description"
-      label="Description"
-      controlType="textarea"
-      bind:value={description}
-    />
-    <Button type="submit" caption="Save" />
-  </form>
+  <div class="meetup-controls">
+    <Button on:click={() => (editMode = 'add')}>New Meetup</Button>
+  </div>
+  {#if editMode === 'add'}
+    <EditMeetup on:save={addMeetup} />
+  {/if}
   <MeetupGrid {meetups} on:togglefavorite={toggleFavorite} />
 </main>
 
@@ -91,9 +68,7 @@
     margin-top: 5rem;
   }
 
-  form {
-    width: 30rem;
-    max-width: 90%;
-    margin: auto;
+  .meetup-controls {
+    margin: 1rem;
   }
 </style>

@@ -6,7 +6,20 @@
 
 <section id="meetups">
   {#each meetups as meetup, index (meetup.id)}
-    <MeetupItem {...meetup} />
+    <!-- https://github.com/sveltejs/svelte/issues/5112 -->
+    <!-- <MeetupItem {...meetup} on:togglefavorite /> -->
+
+    <MeetupItem
+      id={meetup.id}
+      title={meetup.title}
+      subtitle={meetup.subtitle}
+      description={meetup.description}
+      imageUrl={meetup.imageUrl}
+      email={meetup.contactEmail}
+      address={meetup.address}
+      isFav={meetup.isFavorite}
+      on:togglefavorite
+    />
   {:else}
     <p>There are no meetups scheduled!</p>
   {/each}

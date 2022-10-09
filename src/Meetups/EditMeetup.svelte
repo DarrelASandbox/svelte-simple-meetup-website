@@ -14,27 +14,15 @@
   let imageUrl = '';
 
   if (id) {
-    // one time subscription
-    const unsubcribe = meetups.subscribe((items) => {
-      const selectedMeetup = items.find((i) => i.id === id);
-      title = selectedMeetup.title;
-      subtitle = selectedMeetup.subtitle;
-      address = selectedMeetup.address;
-      email = selectedMeetup.contactEmail;
-      description = selectedMeetup.description;
-      imageUrl = selectedMeetup.imageUrl;
-    });
-
-    unsubcribe();
-
-    // alternatively using shorthand for store subscription
-    // const selectedMeetup = $meetups.find((i) => i.id === id);
-    // title = selectedMeetup.title;
-    // subtitle = selectedMeetup.subtitle;
-    // address = selectedMeetup.address;
-    // email = selectedMeetup.contactEmail;
-    // description = selectedMeetup.description;
-    // imageUrl = selectedMeetup.imageUrl;
+    // using shorthand for store subscription
+    // refer to commit (f29b89f) for other implementation
+    const selectedMeetup = $meetups.find((i) => i.id === id);
+    title = selectedMeetup.title;
+    subtitle = selectedMeetup.subtitle;
+    address = selectedMeetup.address;
+    email = selectedMeetup.contactEmail;
+    description = selectedMeetup.description;
+    imageUrl = selectedMeetup.imageUrl;
   }
 
   const dispatch = createEventDispatcher();
@@ -56,11 +44,23 @@
   const cancel = () => dispatch('cancel');
 
   const submitForm = () => {
-    const meetupData = { title, subtitle, address, email, description, imageUrl };
+    const meetupData = {
+      title,
+      subtitle,
+      address,
+      contactEmail: email,
+      description,
+      imageUrl,
+    };
 
     if (id) meetups.updateMeetup(id, meetupData);
     else meetups.addMeetup(meetupData);
     dispatch('save'); // refers to App.svelte `on:save={addMeetup}`
+  };
+
+  const deleteMeetup = () => {
+    meetups.deleteMeetup(id);
+    dispatch('save');
   };
 </script>
 
@@ -111,10 +111,15 @@
       validityMessage="Please enter a valid description."
       bind:value={description}
     />
+
     <Button type="button" mode="outline" slot="footer" on:click={cancel}>Cancel</Button>
     <Button type="button" slot="footer" on:click={submitForm} disabled={!formIsValid}
       >Save</Button
     >
+
+    {#if id}
+      <Button type="button" on:click={deleteMeetup}>Delete</Button>
+    {/if}
   </form>
 </Modal>
 

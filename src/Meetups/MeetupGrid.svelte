@@ -1,11 +1,21 @@
 <script>
-  import MeetupItem from './MeetupItem.svelte';
+  import { MeetupFilter, MeetupItem } from './';
 
   export let meetups;
+
+  let favsOnly = false;
+
+  const setFilter = (e) => (favsOnly = e.detail === 1);
+
+  $: filteredMeetups = favsOnly ? meetups.filter((m) => m.isFavorite) : meetups;
 </script>
 
+<section id="meetup-controls">
+  <MeetupFilter on:select={setFilter} />
+</section>
+
 <section id="meetups">
-  {#each meetups as meetup, index (meetup.id)}
+  {#each filteredMeetups as meetup, index (meetup.id)}
     <!-- https://github.com/sveltejs/svelte/issues/5112 -->
     <!-- <MeetupItem {...meetup} on:togglefavorite /> -->
 
@@ -27,7 +37,7 @@
 </section>
 
 <style>
-  section {
+  #meetups {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
@@ -35,8 +45,12 @@
   }
 
   @media (min-width: 768px) {
-    section {
+    #meetups {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  #meetup-controls {
+    margin: 1rem;
   }
 </style>

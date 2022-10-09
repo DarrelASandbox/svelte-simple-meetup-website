@@ -1,9 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import TextInput from '../UI/TextInput.svelte';
-  import Button from '../UI/Button.svelte';
-  import Modal from '../UI/Modal.svelte';
   import { isEmpty, isValidEmail } from '../helpers/validation';
+  import { meetups } from '../Meetups';
+  import { Button, Modal, TextInput } from '../UI';
 
   let title = '';
   let subtitle = '';
@@ -31,7 +30,9 @@
   const cancel = () => dispatch('cancel');
 
   const submitForm = () => {
-    dispatch('save', { title: title, subtitle, address, email, description, imageUrl });
+    const meetupData = { title, subtitle, address, email, description, imageUrl };
+    meetups.addMeetup(meetupData);
+    dispatch('save'); // refers to App.svelte `on:save={addMeetup}`
   };
 </script>
 

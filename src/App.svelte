@@ -1,23 +1,11 @@
 <script>
-  import { EditMeetup, MeetupGrid, meetups } from './Meetups/index';
+  import { EditMeetup, MeetupGrid, meetups } from './Meetups';
   import { Button, Header } from './UI';
-
-  let loadedMeetups = meetups;
 
   let editMode;
 
   const cancelEdit = () => (editMode = null);
-  const addMeetup = (e) => {
-    const meetupData = { ...e.detail };
-
-    meetups.addMeetup(meetupData);
-    editMode = null;
-  };
-
-  const toggleFavorite = (e) => {
-    const id = e.detail;
-    meetups.toggleFavorite(id);
-  };
+  const addMeetup = () => (editMode = null);
 </script>
 
 <Header />
@@ -29,7 +17,7 @@
   {#if editMode === 'add'}
     <EditMeetup on:save={addMeetup} on:cancel={cancelEdit} />
   {/if}
-  <MeetupGrid meetups={$meetups} on:togglefavorite={toggleFavorite} />
+  <MeetupGrid meetups={$meetups} />
 </main>
 
 <style>

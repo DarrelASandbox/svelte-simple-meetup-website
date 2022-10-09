@@ -19,7 +19,7 @@
 
 <article>
   <header>
-    <h1>
+    <h1 class={isFav ? 'is-favorite' : ''}>
       {title}
       {#if isFav}<Badge>FAVORITE</Badge>{/if}
     </h1>
@@ -36,6 +36,9 @@
   </div>
 
   <footer>
+    <Button mode="outline" type="button" on:click={() => dispatch('edit', id)}
+      >Edit</Button
+    >
     <Button href="mailto:{email}">Contact</Button>
     <Button
       mode="outline"

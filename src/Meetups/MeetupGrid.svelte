@@ -19,6 +19,7 @@
       address={meetup.address}
       isFav={meetup.isFavorite}
       on:showdetails
+      on:edit
     />
   {:else}
     <p>There are no meetups scheduled!</p>

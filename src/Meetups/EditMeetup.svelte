@@ -4,12 +4,38 @@
   import { meetups } from '../Meetups';
   import { Button, Modal, TextInput } from '../UI';
 
+  export let id = null;
+
   let title = '';
   let subtitle = '';
   let address = '';
   let email = '';
   let description = '';
   let imageUrl = '';
+
+  if (id) {
+    // one time subscription
+    const unsubcribe = meetups.subscribe((items) => {
+      const selectedMeetup = items.find((i) => i.id === id);
+      title = selectedMeetup.title;
+      subtitle = selectedMeetup.subtitle;
+      address = selectedMeetup.address;
+      email = selectedMeetup.contactEmail;
+      description = selectedMeetup.description;
+      imageUrl = selectedMeetup.imageUrl;
+    });
+
+    unsubcribe();
+
+    // alternatively using shorthand for store subscription
+    // const selectedMeetup = $meetups.find((i) => i.id === id);
+    // title = selectedMeetup.title;
+    // subtitle = selectedMeetup.subtitle;
+    // address = selectedMeetup.address;
+    // email = selectedMeetup.contactEmail;
+    // description = selectedMeetup.description;
+    // imageUrl = selectedMeetup.imageUrl;
+  }
 
   const dispatch = createEventDispatcher();
 
@@ -31,7 +57,9 @@
 
   const submitForm = () => {
     const meetupData = { title, subtitle, address, email, description, imageUrl };
-    meetups.addMeetup(meetupData);
+
+    if (id) meetups.updateMeetup(id, meetupData);
+    else meetups.addMeetup(meetupData);
     dispatch('save'); // refers to App.svelte `on:save={addMeetup}`
   };
 </script>

@@ -18,6 +18,7 @@
       email={meetup.contactEmail}
       address={meetup.address}
       isFav={meetup.isFavorite}
+      on:showdetails
     />
   {:else}
     <p>There are no meetups scheduled!</p>

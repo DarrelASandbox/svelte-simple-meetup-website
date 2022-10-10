@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { meetups } from '../Meetups';
-  import { Badge, Button } from '../UI';
+  import { Badge, Button, LoadingSpinner } from '../UI';
 
   export let id;
   export let title;
@@ -12,9 +12,12 @@
   export let email;
   export let isFav;
 
+  let isLoading = false;
+
   const dispatch = createEventDispatcher();
 
   const toggleFavorite = () => {
+    isLoading = true;
     fetch(
       `https://meetup-8d74b-default-rtdb.asia-southeast1.firebasedatabase.app/meetups/${id}.json`,
       {
@@ -27,9 +30,13 @@
     )
       .then((res) => {
         if (!res.ok) throw new Error('Something went wrong!');
+        isLoading = false;
         meetups.toggleFavorite(id);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        isLoading = false;
+        console.log(err);
+      });
   };
 </script>
 
@@ -56,15 +63,19 @@
       >Edit</Button
     >
     <Button href="mailto:{email}">Contact</Button>
-    <Button
-      mode="outline"
-      color={isFav ? null : 'success'}
-      type="button"
-      on:click={toggleFavorite}>{isFav ? 'Unfavorite' : 'Favorite'}</Button
-    >
-    <Button type="button" on:click={() => dispatch('showdetails', id)}
-      >Show Details</Button
-    >
+    {#if isLoading}
+      <LoadingSpinner />
+    {:else}
+      <Button
+        mode="outline"
+        color={isFav ? null : 'success'}
+        type="button"
+        on:click={toggleFavorite}>{isFav ? 'Unfavorite' : 'Favorite'}</Button
+      >
+      <Button type="button" on:click={() => dispatch('showdetails', id)}
+        >Show Details</Button
+      >
+    {/if}
   </footer>
 </article>
 

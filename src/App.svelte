@@ -1,12 +1,13 @@
 <script>
   import { EditMeetup, MeetupDetail, MeetupGrid, meetups } from './Meetups';
-  import { Header, LoadingSpinner } from './UI';
+  import { Error, Header, LoadingSpinner } from './UI';
 
   let editMode;
   let editedId;
   let page = 'overview';
   let pageData = {};
   let isLoading = true;
+  let error;
 
   fetch(
     'https://meetup-8d74b-default-rtdb.asia-southeast1.firebasedatabase.app/meetups.json'
@@ -24,7 +25,11 @@
       isLoading = false;
       meetups.setMeetups(loadedMeetups.reverse());
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      error = err;
+      isLoading = false;
+      console.log(err);
+    });
 
   const cancelEdit = () => {
     editMode = null;
@@ -49,8 +54,13 @@
     editMode = 'edit';
     editedId = e.detail;
   };
+
+  const clearError = () => (error = null);
 </script>
 
+{#if error}
+  <Error message={error.message} on:cancel={clearError} />
+{/if}
 <Header />
 
 <main>

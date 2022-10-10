@@ -2,6 +2,8 @@
   import { createEventDispatcher } from 'svelte';
   import { Button } from '../UI';
   import { MeetupFilter, MeetupItem } from './';
+  import { scale } from 'svelte/transition';
+  import { flip } from 'svelte/animate';
 
   export let meetups;
 
@@ -24,18 +26,22 @@
     <!-- https://github.com/sveltejs/svelte/issues/5112 -->
     <!-- <MeetupItem {...meetup} on:togglefavorite /> -->
 
-    <MeetupItem
-      id={meetup.id}
-      title={meetup.title}
-      subtitle={meetup.subtitle}
-      description={meetup.description}
-      imageUrl={meetup.imageUrl}
-      email={meetup.contactEmail}
-      address={meetup.address}
-      isFav={meetup.isFavorite}
-      on:showdetails
-      on:edit
-    />
+    <!-- wrap MeetupItem component in a div for animation -->
+    <!-- since we cannot do it in article which has child elements -->
+    <div transition:scale animate:flip={{ duration: 300 }}>
+      <MeetupItem
+        id={meetup.id}
+        title={meetup.title}
+        subtitle={meetup.subtitle}
+        description={meetup.description}
+        imageUrl={meetup.imageUrl}
+        email={meetup.contactEmail}
+        address={meetup.address}
+        isFav={meetup.isFavorite}
+        on:showdetails
+        on:edit
+      />
+    </div>
   {:else}
     <p>There are no meetups scheduled!</p>
   {/each}

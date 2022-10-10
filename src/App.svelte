@@ -1,5 +1,6 @@
 <script>
   import { EditMeetup, MeetupDetail, MeetupGrid, meetups } from './Meetups';
+  import { SpecialElements } from './SpecialElements';
   import { Error, Header, LoadingSpinner } from './UI';
 
   let editMode;
@@ -71,6 +72,10 @@
     {#if isLoading}
       <LoadingSpinner />
     {:else}
+      <SpecialElements />
+
+      <hr />
+
       <MeetupGrid
         meetups={$meetups}
         on:showdetails={showDetails}
@@ -86,5 +91,9 @@
 <style>
   main {
     margin-top: 5rem;
+  }
+
+  hr {
+    margin: 7rem 0rem;
   }
 </style>

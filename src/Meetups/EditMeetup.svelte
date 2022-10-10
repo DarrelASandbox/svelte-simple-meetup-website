@@ -91,8 +91,16 @@
   };
 
   const deleteMeetup = () => {
-    meetups.deleteMeetup(id);
-    dispatch('save');
+    fetch(
+      `https://meetup-8d74b-default-rtdb.asia-southeast1.firebasedatabase.app/meetups/${id}.json`,
+      { method: 'DELETE' }
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error('Something went wrong!');
+        meetups.deleteMeetup(id);
+        dispatch('save');
+      })
+      .catch((err) => console.log(err));
   };
 </script>
 

@@ -14,7 +14,23 @@
 
   const dispatch = createEventDispatcher();
 
-  const toggleFavorite = () => meetups.toggleFavorite(id);
+  const toggleFavorite = () => {
+    fetch(
+      `https://meetup-8d74b-default-rtdb.asia-southeast1.firebasedatabase.app/meetups/${id}.json`,
+      {
+        method: 'PATCH',
+        // take note of id & isFavourite data
+        // Firebase generates id for us
+        body: JSON.stringify({ isFavorite: !isFav }),
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error('Something went wrong!');
+        meetups.toggleFavorite(id);
+      })
+      .catch((err) => console.log(err));
+  };
 </script>
 
 <article>

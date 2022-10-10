@@ -14,6 +14,8 @@
 
 ## Notes
 
+- [Is it safe to expose Firebase apiKey to the public?](https://stackoverflow.com/questions/37482366/is-it-safe-to-expose-firebase-apikey-to-the-public/37484053#37484053)
+- -[Loading Spinners](https://loading.io/css/)
 - We can also embed Svelte components instead of creating an entire "Svelte-only" app.
 - The core idea behind this approach is simply not control your entire page via Svelte components but only parts of the page.
 - Why and where would you maybe use such an approach?

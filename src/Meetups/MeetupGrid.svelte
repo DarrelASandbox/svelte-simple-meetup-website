@@ -43,7 +43,7 @@
       />
     </div>
   {:else}
-    <p>There are no meetups scheduled!</p>
+    <p id="no-meetups">There are no meetups scheduled!</p>
   {/each}
 </section>
 
@@ -65,5 +65,9 @@
     margin: 1rem;
     display: flex;
     justify-content: space-between;
+  }
+
+  #no-meetups {
+    margin: 1rem;
   }
 </style>

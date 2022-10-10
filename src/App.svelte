@@ -1,11 +1,30 @@
 <script>
   import { EditMeetup, MeetupDetail, MeetupGrid, meetups } from './Meetups';
-  import { Button, Header } from './UI';
+  import { Header, LoadingSpinner } from './UI';
 
   let editMode;
   let editedId;
   let page = 'overview';
   let pageData = {};
+  let isLoading = true;
+
+  fetch(
+    'https://meetup-8d74b-default-rtdb.asia-southeast1.firebasedatabase.app/meetups.json'
+  )
+    .then((res) => {
+      if (!res.ok) throw new Error('Error fetching');
+      return res.json();
+    })
+    .then((data) => {
+      const loadedMeetups = [];
+      for (const key in data) {
+        loadedMeetups.push({ ...data[key], id: key });
+      }
+
+      isLoading = false;
+      meetups.setMeetups(loadedMeetups);
+    })
+    .catch((err) => console.log(err));
 
   const cancelEdit = () => {
     editMode = null;
@@ -39,12 +58,16 @@
     {#if editMode === 'edit'}
       <EditMeetup id={editedId} on:save={savedMeetup} on:cancel={cancelEdit} />
     {/if}
-    <MeetupGrid
-      meetups={$meetups}
-      on:showdetails={showDetails}
-      on:edit={startEdit}
-      on:add={() => (editMode = 'edit')}
-    />
+    {#if isLoading}
+      <LoadingSpinner />
+    {:else}
+      <MeetupGrid
+        meetups={$meetups}
+        on:showdetails={showDetails}
+        on:edit={startEdit}
+        on:add={() => (editMode = 'edit')}
+      />
+    {/if}
   {:else}
     <MeetupDetail id={pageData.id} on:close={closeDetails} />
   {/if}

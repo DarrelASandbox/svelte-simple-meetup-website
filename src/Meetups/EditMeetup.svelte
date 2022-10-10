@@ -54,7 +54,24 @@
     };
 
     if (id) meetups.updateMeetup(id, meetupData);
-    else meetups.addMeetup(meetupData);
+    else {
+      fetch(
+        'https://meetup-8d74b-default-rtdb.asia-southeast1.firebasedatabase.app/meetups.json',
+        {
+          method: 'POST',
+          body: JSON.stringify({ ...meetupData, isFavorite: false }),
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+        .then((res) => {
+          if (!res.ok) throw new Error('Something went wrong!');
+          return res.json();
+        })
+        .then((data) =>
+          meetups.addMeetup({ ...meetupData, isFavorite: false, id: data.name })
+        )
+        .catch((err) => console.log(err));
+    }
     dispatch('save'); // refers to App.svelte `on:save={addMeetup}`
   };
 

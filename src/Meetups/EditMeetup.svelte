@@ -53,8 +53,23 @@
       imageUrl,
     };
 
-    if (id) meetups.updateMeetup(id, meetupData);
-    else {
+    if (id) {
+      fetch(
+        `https://meetup-8d74b-default-rtdb.asia-southeast1.firebasedatabase.app/meetups/${id}.json`,
+        {
+          method: 'PATCH',
+          // take note of id & isFavourite data
+          // Firebase generates id for us
+          body: JSON.stringify({ ...meetupData }),
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+        .then((res) => {
+          if (!res.ok) throw new Error('Something went wrong!');
+          meetups.updateMeetup(id, meetupData);
+        })
+        .catch((err) => console.log(err));
+    } else {
       fetch(
         'https://meetup-8d74b-default-rtdb.asia-southeast1.firebasedatabase.app/meetups.json',
         {

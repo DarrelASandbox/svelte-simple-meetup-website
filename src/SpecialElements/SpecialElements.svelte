@@ -1,5 +1,16 @@
 <script>
-  import { CartItem, Product } from './';
+  import { CartItem, FamilyNode, Product } from './';
+
+  let familyStructure = [
+    {
+      isParent: true,
+      name: 'Chris',
+      children: [
+        { isParent: true, name: 'Moe', children: [{ isParent: false, name: 'Julie' }] },
+      ],
+    },
+    { isParent: false, name: 'Anna' },
+  ];
 
   let renderedComponent = { cmp: Product, title: 'Test Product', id: 'p1' };
 
@@ -18,10 +29,25 @@
   };
 </script>
 
-<button on:click={toggle}>Toggle Display</button>
+<div>
+  {#each familyStructure as familyMember}
+    <FamilyNode member={familyMember} />
+  {/each}
+</div>
 
-<svelte:component
-  this={renderedComponent.cmp}
-  title={renderedComponent.title}
-  id={renderedComponent.id}
-/>
+<hr />
+
+<div>
+  <button on:click={toggle}>Toggle Display</button>
+  <svelte:component
+    this={renderedComponent.cmp}
+    title={renderedComponent.title}
+    id={renderedComponent.id}
+  />
+</div>
+
+<style>
+  hr {
+    margin: 7rem 0rem;
+  }
+</style>

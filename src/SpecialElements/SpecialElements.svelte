@@ -1,6 +1,14 @@
 <script>
   import { CartItem, FamilyNode, Product } from './';
 
+  let y;
+  $: console.log('scrollY:' + y);
+
+  const keydownFunc = () => alert('<svelte:window on:keydown={keydownFunc} />');
+
+  let currentTitle = 'My app';
+  const switchTitle = () => (currentTitle = 'A new title');
+
   let familyStructure = [
     {
       isParent: true,
@@ -28,6 +36,13 @@
         });
   };
 </script>
+
+<svelte:window on:keydown={keydownFunc} bind:scrollY={y} />
+<svelte:head>
+  <title>{currentTitle}</title>
+</svelte:head>
+<svelte:body on:mouseenter />
+<button on:click={switchTitle}>Switch Title</button>
 
 <div>
   {#each familyStructure as familyMember}
